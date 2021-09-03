@@ -38,7 +38,7 @@ def get_book_page(book_url):
     # Récupération de l'URL de la page produit choisie
     product_page_url = soup.find('ul', class_='breadcrumb').find_all('a')[2]['href'] 
     
-    data = {
+    data = [{
         'product_page_url': product_page_url,
         'upc' : upc,
         'title' : title,
@@ -50,6 +50,22 @@ def get_book_page(book_url):
         'review_rating' : review_rating,
         'image_url' :  image_url,
         'category' : category
-         }
-            
+         }]
+    
     return data
+
+    # Récupération des urls des livres en fonction de la catégorie 
+def get_book_urls(book_link):
+    url = book_link
+    r = requests.get(url)
+    elt = bs(r.content, 'html.parser')
+
+    url_tags = elt.find('ol', class_='row').find_all('div', class_='image_container')
+    base_url = 'https://books.toscrape.com/catalogue/'
+    book_urls = []
+
+    for item in url_tags:
+        for link in item.find_all('a'):
+            book_urls.append(base_url + link['href'].strip('../../../'))
+    #print(book_urls)
+    return book_urls

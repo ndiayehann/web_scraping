@@ -69,3 +69,12 @@ def get_book_urls(book_link):
             book_urls.append(base_url + link['href'].strip('../../../'))
     #print(book_urls)
     return book_urls
+
+    # Récupération des infos des livres en fonction de la catégorie 
+def get_book_page_contents(book_urls):
+    
+    for i in range(len(book_urls)):
+        info = get_book_page(book_urls[i])
+        print (info)
+    return info
+

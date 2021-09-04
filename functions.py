@@ -96,4 +96,8 @@ def get_category():
     print(category_links)
     return category_links
 
+def all_books_info(category_links):
+    for i in range(len(category_links)):
+        all_info = get_book_page_contents(get_book_urls(category_links[i]))
+        return all_info
 

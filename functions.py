@@ -1,19 +1,15 @@
 import requests
 from bs4 import BeautifulSoup as bs
-import csv
 
 def get_book_page(book_url):
     
     # Connexion à la page produit choisie
-    #url = 'http://books.toscrape.com/its-only-the-himalayas_981/index.html'
     url = book_url
-    
     response = requests.get(url)
 
     # On parse le contenu HTML obtenu
     soup = bs(response.content, 'html.parser')
     # Extraction des éléments de la table contenant les headers
-
     table = soup.find('table', class_= 'table table-striped')
     #print(table)
     upc = table.find('tr').td.text.strip('\n')  
@@ -22,8 +18,8 @@ def get_book_page(book_url):
     price_including_tax = table.find('tr').find_next_siblings()[3].td.text
     number_available = table.find('tr').find_next_siblings()[4].td.text
     review_rating = table.find('tr').find_next_siblings()[5].td.text
-    category = soup.find('ul', class_='breadcrumb').li.find_next_siblings()[1].text
-    #print(category)
+    category = soup.find('ul', class_='breadcrumb').li.find_next_siblings()[1].text.replace('\n', '')
+    print(category)
     # Ajout de la colonne description
     product_description = soup.find('div', class_='sub-header').find_next_siblings()[0].text.strip('\n')
 
@@ -32,12 +28,15 @@ def get_book_page(book_url):
 
     # Ajout de la colonne image_url
     image = soup.find('div', class_='item active')
+    base_image_url = 'https://books.toscrape.com/'
     for image in image.find_all('img'):
-        image_url = image['src']
+        image_url = base_image_url + image['src'].strip('../../') 
 
     # Récupération de l'URL de la page produit choisie
-    product_page_url = soup.find('ul', class_='breadcrumb').find_all('a')[2]['href'] 
-    
+   # product_page_url = soup.find('ul', class_='breadcrumb').find_all('a')[2]['href']
+    base_url = 'books.toscrape.com/catalogue/' 
+    partial_link= soup.find('div', class_='image_container').find('a')['href'].strip('../')
+    product_page_url = base_url + partial_link
     data = [{
         'product_page_url': product_page_url,
         'upc' : upc,
@@ -77,4 +76,6 @@ def get_book_page_contents(book_urls):
         info = get_book_page(book_urls[i])
         print (info)
     return info
+
+
 

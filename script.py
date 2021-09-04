@@ -1,4 +1,4 @@
-from functions import get_book_page, get_book_urls, get_book_page_contents, get_category
+from functions import get_book_page, get_book_urls, get_book_page_contents, get_category, all_books_info
 import csv  
 
 book_info = get_book_page('https://books.toscrape.com/catalogue/lost-among-the-living_31/index.html') 
@@ -18,3 +18,5 @@ for i in range(1,3):
 get_book_page_contents(book_urls)
 
 category_links = get_category()
+
+all_books_info(category_links)

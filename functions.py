@@ -77,5 +77,23 @@ def get_book_page_contents(book_urls):
         print (info)
     return info
 
+    # Définition d'une fonction pour charger toutes les urls des différentes catégories
+def get_category():
+    
+    url = 'https://books.toscrape.com/catalogue/page-1.html'
+    response = requests.get(url)
+    soup = bs(response.content, 'html.parser')
+    #print(soup.prettify())
+    parent_category_tags = soup.find('ul', class_= 'nav nav-list').li
+    children_category_tags = parent_category_tags.findChildren('ul', recursive=False)
+    #print(children_category_tags)
+
+    category_links = []
+
+    for item in children_category_tags:
+        for link in item.find_all('a'):
+            category_links.append(url.replace('page-1.html', '') + link['href'])
+    print(category_links)
+    return category_links
 
 
